@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobseeker_madhack/login.dart';
 import 'package:jobseeker_madhack/signup.dart';
 
 void main() {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  SignupPage(),
+      home:  LoginPage(),
     );
   }
 }
