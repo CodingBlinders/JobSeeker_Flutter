@@ -74,7 +74,7 @@ class _SearchPageState extends State<SearchPage> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              child: Icon(Icons.filter_4),
+              child: Icon(Icons.settings),
             ),
           ),
         ], //Actions

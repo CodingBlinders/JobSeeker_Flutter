@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'components/page_indicator.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'components/shadowDropDown.dart';
 
 class JobFormPage1 extends StatefulWidget {
   const JobFormPage1({Key? key}) : super(key: key);
@@ -18,181 +20,238 @@ class _JobFormPage1State extends State<JobFormPage1> {
     'Finance': ['Accounting', 'Financial Analyst', 'Investment Banking'],
   };
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      appBar: AppBar(
-
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Page Indicator
-            PageIndicator(
+            const PageIndicator(
               currentPage: 0,
               totalPages: 4,
             ),
-            const Center(
-              child: Text(
-                'Description',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-                textAlign: TextAlign.center, // Optional: to center the text horizontally
-              ),
-            ),
             const SizedBox(height: 20), // Add some space between page indicator and form fields
             // Industry Dropdown
-            Text(
+
+            const Text(
               'Industry',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            DropdownButtonFormField<String>(
-              value: selectedIndustry,
-              items: <String>['Design and Development', 'Marketing', 'Finance']
-                  .map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  selectedIndustry = value!;
-                  selectedCategory = null; // Reset category when industry changes
-                });
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Select Industry',
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
+                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: DropdownButtonFormField<String>(
+                value: selectedIndustry,
+                items: <String>['Design and Development', 'Marketing', 'Finance']
+                    .map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedIndustry = value!;
+                    selectedCategory = null; // Reset category when industry changes
+                  });
+                },
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.transparent, // Set to transparent to let Container handle background color
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
+
             SizedBox(height: 20),
             // Category Dropdown
             Text(
               'Category',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            DropdownButtonFormField<String>(
-              value: selectedCategory,
-              items: selectedIndustry.isNotEmpty
-                  ? categoriesMap[selectedIndustry]!.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList()
-                  : [],
-              onChanged: (String? value) {
-                setState(() {
-                  selectedCategory = value;
-                });
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Select Category',
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
+                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: DropdownButtonFormField<String>(
+                value: selectedCategory,
+                items: selectedIndustry.isNotEmpty
+                    ? categoriesMap[selectedIndustry]!.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList()
+                    : [],
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedCategory = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
+
             SizedBox(height: 20),
-            Text(
+            const Text(
               'Job Position',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter Job Position',
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
+                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
+
             SizedBox(height: 20),
             Text(
               'Job Type',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            DropdownButtonFormField<String>(
-              items: <String>['Full Time', 'Part Time']
-                  .map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? value) {},
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Select Job Type',
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+            Container(
+              decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
+              borderRadius: BorderRadius.circular(5.0), // Add border radius
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 20,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+              child: DropdownButtonFormField<String>(
+                items: <String>['Full Time', 'Part Time']
+                    .map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {},
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
+
             SizedBox(height: 20),
             Text(
               'Type of Workspace',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            DropdownButtonFormField<String>(
-              items: <String>['Onsite', 'Online']
-                  .map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? value) {},
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Select Workspace Type',
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
+                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: DropdownButtonFormField<String>(
+                items: <String>['Onsite', 'Online']
+                    .map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {},
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      transitionDuration: Duration(milliseconds: 500),
-                      pageBuilder: (context, animation, secondaryAnimation) => JobFormPage2(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        var begin = Offset(1.0, 0.0);
-                        var end = Offset.zero;
-                        var curve = Curves.ease;
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: const Text('Next'),
+
+            Spacer(), // Added Spacer to push the button to the bottom
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 200,
+                height: 50,
+                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => JobFormPage2()),
+                    );
+                  },
+                  child: const Text('Next'),
+                ),
               ),
             ),
           ],
@@ -201,8 +260,6 @@ class _JobFormPage1State extends State<JobFormPage1> {
     );
   }
 }
-
-
 
 class JobFormPage2 extends StatefulWidget {
   const JobFormPage2({Key? key}) : super(key: key);
@@ -263,6 +320,7 @@ class _JobFormPage2State extends State<JobFormPage2> {
               currentPage: 1,
               totalPages: 4,
             ),
+            const SizedBox(height: 20),
             const Text(
               'Search Locations',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
@@ -324,30 +382,22 @@ class _JobFormPage2State extends State<JobFormPage2> {
                   },
                 ),
               ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      transitionDuration: const Duration(milliseconds: 500),
-                      pageBuilder: (context, animation, secondaryAnimation) => const JobFormPage3(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        var begin = const Offset(1.0, 0.0);
-                        var end = Offset.zero;
-                        var curve = Curves.ease;
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: const Text('Next'),
+            Spacer(), // Added Spacer to push the button to the bottom
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 200,
+                height: 50,
+                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => JobFormPage3()),
+                    );
+                  },
+                  child: const Text('Next'),
+                ),
               ),
             ),
           ],
@@ -356,7 +406,6 @@ class _JobFormPage2State extends State<JobFormPage2> {
     );
   }
 }
-
 
 class JobFormPage3 extends StatefulWidget {
   const JobFormPage3({Key? key}) : super(key: key);
@@ -423,47 +472,29 @@ class _JobFormPage3State extends State<JobFormPage3> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 50,
-                  width: 200,
-                  margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          transitionDuration: const Duration(milliseconds: 500),
-                          pageBuilder: (context, animation, secondaryAnimation) => FinalJobPage(),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            var begin = const Offset(1.0, 0.0);
-                            var end = Offset.zero;
-                            var curve = Curves.ease;
-                            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                            var offsetAnimation = animation.drive(tween);
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.purple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
+            Spacer(), // Added Spacer to push the button to the bottom
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 200,
+                height: 50,
+                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FinalJobPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: const Text('Next',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  ),
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -481,50 +512,53 @@ class FinalJobPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Final Job Form',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-            ),
-            SizedBox(height: 20),
-            _buildLabeledTextField('Job Description'),
-            SizedBox(height: 20),
-            _buildLabeledTextField('Requirements'),
-            SizedBox(height: 20),
-            _buildLabeledTextField('Responsibilities'),
-            SizedBox(height: 20),
-            _buildLabeledTextField('About Company'),
-            SizedBox(height: 20),
-            Spacer(), // Added Spacer to push the button to the bottom
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 200,
-                height: 50,
-                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Perform any action needed on button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Final Job Form',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
                     ),
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                    SizedBox(height: 20),
+                    _buildLabeledTextField('Job Description'),
+                    SizedBox(height: 20),
+                    _buildLabeledTextField('Requirements'),
+                    SizedBox(height: 20),
+                    _buildLabeledTextField('Responsibilities'),
+                    SizedBox(height: 20),
+                    _buildLabeledTextField('About Company'),
+                    SizedBox(height: 20), // Add some extra space at the end
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            child: ElevatedButton(
+              onPressed: () {
+                // Perform any action needed on button press
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.purple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              child: const Text(
+                'Submit',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -539,27 +573,28 @@ class FinalJobPage extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Container(
-          height: 80,
           decoration: BoxDecoration(
             color: Colors.white,
+            border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
+            borderRadius: BorderRadius.circular(5.0), // Add border radius
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 3,
-                blurRadius: 4,
+                spreadRadius: 2,
+                blurRadius: 20,
                 offset: Offset(0, 3),
               ),
             ],
           ),
-          child: const TextField(
-            maxLines: 3,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.transparent, // Set the border color to transparent
-                ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(0),
               ),
-              contentPadding: EdgeInsets.all(8),
             ),
           ),
         ),
@@ -568,4 +603,8 @@ class FinalJobPage extends StatelessWidget {
   }
 }
 
-
+void main() {
+  runApp(MaterialApp(
+    home: FinalJobPage(),
+  ));
+}
