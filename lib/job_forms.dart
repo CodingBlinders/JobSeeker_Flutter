@@ -29,14 +29,25 @@ class _JobFormPage1State extends State<JobFormPage1> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Page Indicator
-            const PageIndicator(
-              currentPage: 0,
-              totalPages: 4,
+            const Center(
+              child: PageIndicator(
+                currentPage: 0,
+                totalPages: 4,
+              ),
             ),
+
+            const Center(
+              child: Text(
+                "Description",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                ),
+              ),
+            ),
+
             const SizedBox(height: 20), // Add some space between page indicator and form fields
             // Industry Dropdown
-
             const Text(
               'Industry',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -250,7 +261,16 @@ class _JobFormPage1State extends State<JobFormPage1> {
                       MaterialPageRoute(builder: (context) => JobFormPage2()),
                     );
                   },
-                  child: const Text('Next'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -321,10 +341,16 @@ class _JobFormPage2State extends State<JobFormPage2> {
               totalPages: 4,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Search Locations',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+            const Center(
+              child: Text(
+                "Search Locations",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                ),
+              ),
             ),
+
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
@@ -396,7 +422,16 @@ class _JobFormPage2State extends State<JobFormPage2> {
                       MaterialPageRoute(builder: (context) => JobFormPage3()),
                     );
                   },
-                  child: const Text('Next'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -430,9 +465,14 @@ class _JobFormPage3State extends State<JobFormPage3> {
               currentPage: 2,
               totalPages: 4,
             ),
-            const Text(
-              'Select Price Range',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+            const Center(
+              child: Text(
+                "Select Price Range",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                ),
+              ),
             ),
             const SizedBox(height: 40),
             RangeSlider(
@@ -489,7 +529,7 @@ class _JobFormPage3State extends State<JobFormPage3> {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.purple,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   child: const Text(
@@ -521,9 +561,18 @@ class FinalJobPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Final Job Form',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                    const PageIndicator(
+                      currentPage: 3,
+                      totalPages: 4,
+                    ),
+                    const Center(
+                      child: Text(
+                        "Details",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                        ),
+                      ),
                     ),
                     SizedBox(height: 20),
                     _buildLabeledTextField('Job Description'),
@@ -540,7 +589,7 @@ class FinalJobPage extends StatelessWidget {
             ),
           ),
           Container(
-            width: double.infinity,
+            width: 200,
             padding: EdgeInsets.all(20),
             child: ElevatedButton(
               onPressed: () {
@@ -549,7 +598,7 @@ class FinalJobPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 primary: Colors.purple,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
               child: const Text(

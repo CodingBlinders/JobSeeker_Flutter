@@ -69,12 +69,12 @@ class _SearchPageState extends State<SearchPage> {
                 // Add your filter button functionality here
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // background color
+                backgroundColor: Colors.blue, // background color
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              child: Icon(Icons.settings),
+              child: const Icon(Icons.settings),
             ),
           ),
         ], //Actions
@@ -121,8 +121,8 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
 
-            SizedBox(height: 20),
-            Expanded(
+            const SizedBox(height: 20),
+            const Expanded(
               child: Center(
                 child: Text('Search Results Here'),
               ),
