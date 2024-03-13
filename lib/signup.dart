@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobseeker_madhack/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -12,28 +18,73 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _roleController = TextEditingController();
+  String _selectedRole = 'jobApplicant';
 
   bool _isObscure = true; // Track whether the password is obscured or not
-
+  bool _isObscure1 = true;
   Future<void> _signup() async {
+
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Retrieve user data from SharedPreferences
+    // String userId = prefs.getString('userId') ?? '';
+    // String userEmail = prefs.getString('userEmail') ?? '';
+    // String userRole = prefs.getString('userRole') ?? '';
+    // String userToken = prefs.getString('userToken') ?? '';
+    //
+    // // Now you can use the retrieved data as needed
+    // print('User ID: $userId');
+    // print('User Email: $userEmail');
+    // print('User Role: $userRole');
+    // print('User Token: $userToken');
+
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request('POST', Uri.parse('http://127.0.0.1:4000/api/auth/signup'));
+    var request = http.Request('POST', Uri.parse('http://madhack.codingblinders.com/auth/signup'));
     request.bodyFields = {
       'email': _emailController.text,
       'password': _passwordController.text,
       'confirm_password': _confirmPasswordController.text,
       'name': _nameController.text,
-      'role': _roleController.text,
+      'role': _selectedRole,
     };
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      final responseData = await response.stream.bytesToString();
+      final userDataJson = json.decode(responseData);
+
+      // Extracting data from the response
+      String userId = userDataJson['data']['id'];
+      String userEmail = userDataJson['data']['email'];
+      String userRole = userDataJson['data']['role'];
+      String userToken = userDataJson['data']['token'];
+
+      // Store user data in SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', userId);
+      await prefs.setString('userEmail', userEmail);
+      await prefs.setString('userRole', userRole);
+      await prefs.setString('userToken', userToken);
+      print(responseData);
+
     } else {
-      print(response.reasonPhrase);
+      toastification.show(
+        context: context,
+        title: Text(response.reasonPhrase.toString()),
+        autoCloseDuration: const Duration(seconds: 2),
+        type: ToastificationType.error,
+        style: ToastificationStyle.fillColored,
+        alignment: Alignment.bottomCenter,
+        direction: TextDirection.ltr,
+        showProgressBar: false,
+        closeButtonShowType: CloseButtonShowType.none,
+        closeOnClick: false,
+        pauseOnHover: false,
+        dragToClose: true,
+        applyBlurEffect: true,
+      );
+      // print(response.reasonPhrase);
     }
   }
 
@@ -85,7 +136,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   child: TextFormField(
                     controller: _passwordController,
-                    obscureText: _isObscure,
+                    obscureText: _isObscure1,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: '********',
@@ -98,12 +149,12 @@ class _SignupPageState extends State<SignupPage> {
 
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isObscure ? Icons.visibility_off : Icons.visibility,
+                          _isObscure1 ? Icons.visibility_off : Icons.visibility,
                           color: Colors.grey,
                         ),
                         onPressed: () {
                           setState(() {
-                            _isObscure = !_isObscure;
+                            _isObscure1 = !_isObscure1;
                           });
                         },
                       ),
@@ -181,7 +232,46 @@ class _SignupPageState extends State<SignupPage> {
                   'Role',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
-                _buildInputField(_roleController, 'Enter your role'),
+                Container(
+                  width: MediaQuery.of(context).size.width - 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 30,
+                        offset: Offset(0, 0), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedRole,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+
+
+                    ),
+
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedRole = newValue!;
+                      });
+                    },
+                    isExpanded: true,
+                    items: <String>['jobApplicant', 'employer']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 30), // Add larger gap after last input field
@@ -202,7 +292,7 @@ class _SignupPageState extends State<SignupPage> {
               ),),
             ),
             SizedBox(height: 6.0,),
-            Text('or Sign in with',style: TextStyle(
+            Text('or Sign up with',style: TextStyle(
               color: Colors.grey
             ),),
             Row(
@@ -227,10 +317,12 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(height: 30.0,),
             GestureDetector(
               onTap: () {
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),);
               },
               child: Text(
-                'Already a Member? Signup',
+                'Already a Member? Sign In',
                               ),
             ),
 
@@ -256,7 +348,7 @@ class _SignupPageState extends State<SignupPage> {
       ),
       child: TextFormField(
         controller: controller,
-        obscureText: _isObscure,
+
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: label,

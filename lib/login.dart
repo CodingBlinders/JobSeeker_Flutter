@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobseeker_madhack/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _signup() async {
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request('POST', Uri.parse('http://127.0.0.1:4000/api/auth/signup'));
+    var request = http.Request('POST', Uri.parse('http://madhack.codingblinders.com/auth/signin'));
     request.bodyFields = {
       'email': _emailController.text,
       'password': _passwordController.text,
@@ -27,9 +32,60 @@ class _LoginPageState extends State<LoginPage> {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      final responseData = await response.stream.bytesToString();
+      final userDataJson = json.decode(responseData);
+
+      // Extracting data from the response
+      String userId = userDataJson['data']['id'];
+      String userEmail = userDataJson['data']['email'];
+      String userRole = userDataJson['data']['role'];
+      String userToken = userDataJson['data']['token'];
+
+      // Store user data in SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', userId);
+      await prefs.setString('userEmail', userEmail);
+      await prefs.setString('userRole', userRole);
+      await prefs.setString('userToken', userToken);
+      print(responseData);
+
+      toastification.show(
+        context: context,
+        title: Text('Successfully Signed In!',style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        autoCloseDuration: const Duration(seconds: 3),
+        type: ToastificationType.success,
+        style: ToastificationStyle.flatColored,
+        alignment: Alignment.topCenter,
+        direction: TextDirection.ltr,
+        showProgressBar: false,
+        closeButtonShowType: CloseButtonShowType.none,
+        closeOnClick: false,
+        pauseOnHover: true,
+        dragToClose: true,
+        applyBlurEffect: true,
+      );
+
+
     } else {
-      print(response.reasonPhrase);
+      final responseData = await response.stream.bytesToString();
+      final userDataJson = json.decode(responseData);
+
+      toastification.show(
+        context: context,
+        title: Text(userDataJson['message'],style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        autoCloseDuration: const Duration(seconds: 3),
+        type: ToastificationType.error,
+        style: ToastificationStyle.fillColored,
+        alignment: Alignment.topCenter,
+        direction: TextDirection.ltr,
+        showProgressBar: false,
+        closeButtonShowType: CloseButtonShowType.none,
+        closeOnClick: false,
+        pauseOnHover: true,
+        dragToClose: true,
+        applyBlurEffect: true,
+      );
+
     }
   }
 
@@ -153,10 +209,13 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 30.0,),
             GestureDetector(
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupPage()),
+                );
               },
               child: Text(
-                'Don\'t have an Account? Login',
+                'Don\'t have an Account? Signup',
                               ),
             ),
 
@@ -182,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: TextFormField(
         controller: controller,
-        obscureText: _isObscure,
+
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: label,
