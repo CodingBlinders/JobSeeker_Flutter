@@ -41,6 +41,12 @@ class _LoginPageState extends State<LoginPage> {
       String userRole = userDataJson['data']['role'];
       String userToken = userDataJson['data']['token'];
 
+      if(userRole == 'jobApplicant'){
+        Navigator.pushNamed(context, '/home');
+      }else{
+
+      }
+
       // Store user data in SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', userId);
@@ -176,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 minimumSize: Size(190, 50), // Set button size
               ),
-              child: Text('Sign Up',style: TextStyle(
+              child: Text('Sign In',style: TextStyle(
                 color: Colors.black,
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold
@@ -209,10 +215,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 30.0,),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignupPage()),
-                );
+                Navigator.pushNamed(context, '/signup');
               },
               child: Text(
                 'Don\'t have an Account? Signup',

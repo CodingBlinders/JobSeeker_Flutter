@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jobseeker_madhack/filter_screen.dart';
 import 'package:jobseeker_madhack/home_screen.dart';
+import 'package:jobseeker_madhack/login.dart';
 import 'package:jobseeker_madhack/send_cv.dart';
+import 'package:jobseeker_madhack/signup.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,11 +33,13 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
       ),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/login': (context) =>  LoginPage(),
+        '/signup': (context) =>  SignupPage(),
         '/filter': (context) => const FilterScreen(),
         '/send-cv': (context) => const SendCVScreen(),
+        '/home': (context) => const HomeScreen(),
       },
     );
   }
