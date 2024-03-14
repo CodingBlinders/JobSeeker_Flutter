@@ -3,6 +3,8 @@ import 'job_forms.dart';
 
 
 class JobPosting extends StatelessWidget {
+  const JobPosting({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -10,18 +12,20 @@ class JobPosting extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SearchPage(),
+      home: const SearchPage(),
     );
   }
 }
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +40,14 @@ class _SearchPageState extends State<SearchPage> {
                 color: Colors.grey.withOpacity(0.3),
                 spreadRadius: 2,
                 blurRadius: 10,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
           child: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 onPressed: () {
                   // Implement search functionality
                 },
@@ -69,12 +73,12 @@ class _SearchPageState extends State<SearchPage> {
                 // Add your filter button functionality here
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // background color
+                backgroundColor: Colors.blue, // background color
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              child: Icon(Icons.filter_4),
+              child: const Icon(Icons.filter_4),
             ),
           ),
         ], //Actions
@@ -84,7 +88,7 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -92,15 +96,15 @@ class _SearchPageState extends State<SearchPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => JobFormPage1()), // Using JobForms instead of JobForm
+                        MaterialPageRoute(builder: (context) => const JobFormPage1()), // Using JobForms instead of JobForm
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue, // background color
+                      backgroundColor: Colors.blue, // background color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      minimumSize: Size(double.infinity, 50), // Set minimumSize to increase height
+                      minimumSize: const Size(double.infinity, 50), // Set minimumSize to increase height
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -121,8 +125,8 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
 
-            SizedBox(height: 20),
-            Expanded(
+            const SizedBox(height: 20),
+            const Expanded(
               child: Center(
                 child: Text('Search Results Here'),
               ),

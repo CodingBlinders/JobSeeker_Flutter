@@ -32,7 +32,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Page Indicator
-            PageIndicator(
+            const PageIndicator(
               currentPage: 0,
               totalPages: 4,
             ),
@@ -45,7 +45,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
             ),
             const SizedBox(height: 20), // Add some space between page indicator and form fields
             // Industry Dropdown
-            Text(
+            const Text(
               'Industry',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -64,7 +64,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
                   selectedCategory = null; // Reset category when industry changes
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Select Industry',
                 filled: true,
@@ -74,9 +74,9 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Category Dropdown
-            Text(
+            const Text(
               'Category',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -95,7 +95,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
                   selectedCategory = value;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Select Category',
                 filled: true,
@@ -105,12 +105,12 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Job Position',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            TextField(
+            const TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Enter Job Position',
@@ -121,8 +121,8 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Job Type',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -135,7 +135,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 );
               }).toList(),
               onChanged: (String? value) {},
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Select Job Type',
                 filled: true,
@@ -145,8 +145,8 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Type of Workspace',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -159,7 +159,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 );
               }).toList(),
               onChanged: (String? value) {},
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Select Workspace Type',
                 filled: true,
@@ -169,17 +169,17 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      transitionDuration: Duration(milliseconds: 500),
-                      pageBuilder: (context, animation, secondaryAnimation) => JobFormPage2(),
+                      transitionDuration: const Duration(milliseconds: 500),
+                      pageBuilder: (context, animation, secondaryAnimation) => const JobFormPage2(),
                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        var begin = Offset(1.0, 0.0);
+                        var begin = const Offset(1.0, 0.0);
                         var end = Offset.zero;
                         var curve = Curves.ease;
                         var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -401,29 +401,29 @@ class _JobFormPage3State extends State<JobFormPage3> {
                 '\$${(_values.end ~/ 1000)}k',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Minimum'),
-                    SizedBox(height: 8),
-                    Text('\$${(_values.start ~/ 1000)}k', style: TextStyle(fontSize: 18)),
+                    const Text('Minimum'),
+                    const SizedBox(height: 8),
+                    Text('\$${(_values.start ~/ 1000)}k', style: const TextStyle(fontSize: 18)),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Maximum'),
-                    SizedBox(height: 8),
-                    Text('\$${(_values.end ~/ 1000)}k', style: TextStyle(fontSize: 18)),
+                    const Text('Maximum'),
+                    const SizedBox(height: 8),
+                    Text('\$${(_values.end ~/ 1000)}k', style: const TextStyle(fontSize: 18)),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Positioned(
               bottom: 0,
               left: 0,
@@ -433,14 +433,14 @@ class _JobFormPage3State extends State<JobFormPage3> {
                 child: Container(
                   height: 50,
                   width: 200,
-                  margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                  margin: const EdgeInsets.only(bottom: 20), // 20px above the bottom
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
                           transitionDuration: const Duration(milliseconds: 500),
-                          pageBuilder: (context, animation, secondaryAnimation) => FinalJobPage(),
+                          pageBuilder: (context, animation, secondaryAnimation) => const FinalJobPage(),
                           transitionsBuilder: (context, animation, secondaryAnimation, child) {
                             var begin = const Offset(1.0, 0.0);
                             var end = Offset.zero;
@@ -456,7 +456,7 @@ class _JobFormPage3State extends State<JobFormPage3> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.purple,
+                      backgroundColor: Colors.purple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
@@ -477,6 +477,8 @@ class _JobFormPage3State extends State<JobFormPage3> {
 
 
 class FinalJobPage extends StatelessWidget {
+  const FinalJobPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -486,32 +488,32 @@ class FinalJobPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Final Job Form',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildLabeledTextField('Job Description'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildLabeledTextField('Requirements'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildLabeledTextField('Responsibilities'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildLabeledTextField('About Company'),
-            SizedBox(height: 20),
-            Spacer(), // Added Spacer to push the button to the bottom
+            const SizedBox(height: 20),
+            const Spacer(), // Added Spacer to push the button to the bottom
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: 200,
                 height: 50,
-                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                margin: const EdgeInsets.only(bottom: 20), // 20px above the bottom
                 child: ElevatedButton(
                   onPressed: () {
                     // Perform any action needed on button press
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.purple,
+                    backgroundColor: Colors.purple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -535,9 +537,9 @@ class FinalJobPage extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Container(
           height: 80,
           decoration: BoxDecoration(
@@ -547,7 +549,7 @@ class FinalJobPage extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 3,
                 blurRadius: 4,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
