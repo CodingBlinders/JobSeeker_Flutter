@@ -147,6 +147,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'JobCard.dart';
+
 void main() {
   runApp(JobPosting());
 }
@@ -208,106 +210,6 @@ class _JobPostingState extends State<JobPosting> {
   }
 }
 
-class JobCard extends StatelessWidget {
-  final dynamic job;
 
-  JobCard({required this.job});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 5, right: 10),
-                child: Icon(
-                  Icons.work,
-                  size: 50,
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      job['title'],
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text(
-                      'Coding Blinders - Sri Lanka',
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(Icons.visibility),
-                  SizedBox(width: 5),
-                  Text('1.8K'),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Text(job['TypeOfWorkspace']),
-              ),
-              SizedBox(width: 10),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Text(job['jobType']),
-              ),
-              SizedBox(width: 10),
-              Padding(
-                padding: EdgeInsets.only(top: 5, right: 50),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$${job['salaryRange']['low']}-${job['salaryRange']['high']}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                  Text(
-                    '/Mo',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
 
 
