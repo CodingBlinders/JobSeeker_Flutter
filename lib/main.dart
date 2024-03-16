@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:jobseeker_madhack/JobPosting.dart';
+import 'package:jobseeker_madhack/aboutme.dart';
+import 'package:jobseeker_madhack/add_education.dart';
+import 'package:jobseeker_madhack/add_experiance.dart';
+import 'package:jobseeker_madhack/add_qualifications.dart';
+import 'package:jobseeker_madhack/add_skill.dart';
 import 'package:jobseeker_madhack/filter_screen.dart';
 import 'package:jobseeker_madhack/home_screen.dart';
-import 'package:jobseeker_madhack/job_forms.dart';
+import 'package:jobseeker_madhack/job_view.dart';
 import 'package:jobseeker_madhack/login.dart';
+import 'package:jobseeker_madhack/profile.dart';
 import 'package:jobseeker_madhack/send_cv.dart';
 import 'package:jobseeker_madhack/signup.dart';
 
 void main() {
-  runApp(JobPosting());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -42,7 +48,14 @@ class _MyAppState extends State<MyApp> {
         '/filter': (context) => const FilterScreen(),
         '/send-cv': (context) => const SendCVScreen(),
         '/home': (context) => const HomeScreen(),
-        '/JobPostingForm': (context) => const JobFormPage1(),
+        '/profile': (context) =>  UserProfilePage(),
+        '/aboutme': (context) =>  AboutMeFormPage(),
+        '/add-education': (context) =>  EducationalExperienceFormScreen(),
+        '/add-skill': (context) =>  AddSkillScreen(),
+        '/add-experience': (context) =>  WorkExperienceFormScreen(),
+        '/add-qualification': (context) =>  QualificationsFormScreen(),
+        '/job-view': (context) =>  JobView(),
+        '/emp': (context) =>  JobPosting(),
       },
     );
   }
