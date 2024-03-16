@@ -1,18 +1,19 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'package:toastification/toastification.dart';
 
-
-
 class JobView extends StatefulWidget {
+  final String jobId; // Add jobId parameter
+
+  JobView({required this.jobId});
+
   @override
-  _JobView createState() => _JobView();
+  _JobViewState createState() => _JobViewState();
 }
 
-class _JobView extends State<JobView> {
+class _JobViewState extends State<JobView> {
   Map<String, dynamic>? jobData;
 
   @override
@@ -23,11 +24,10 @@ class _JobView extends State<JobView> {
 
   Future<void> fetchJobData() async {
     var response = await http.get(
-        Uri.parse('http://madhack.codingblinders.com/job/65edfa92e4761f65ec8f2135'));
+        Uri.parse('http://madhack.codingblinders.com/job/${widget.jobId}')); // Use widget.jobId to get the jobId
     if (response.statusCode == 200) {
       setState(() {
         jobData = jsonDecode(response.body)['data'];
-
       });
     } else {
       toastification.show(
