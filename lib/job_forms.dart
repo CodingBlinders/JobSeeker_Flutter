@@ -2,6 +2,94 @@ import 'package:flutter/material.dart';
 import 'components/page_indicator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'components/shadowDropDown.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+const apiUrl = "http://madhack.codingblinders.com//job/create/";
+
+class FormData {
+  final String industry;
+  final String title;
+  final String category;
+  final String jobPosition;
+  final String jobType;
+  final String workspaceType;
+  final String location;
+  final int minPrice;
+  final int maxPrice;
+  late String jobDescription;
+  late String requirements;
+  late String responsibilities;
+  late String aboutCompany;
+
+  FormData({
+    required this.industry,
+    required this.title,
+    required this.category,
+    required this.jobPosition,
+    required this.jobType,
+    required this.workspaceType,
+    required this.location,
+    required this.minPrice,
+    required this.maxPrice,
+    required this.jobDescription,
+    required this.requirements,
+    required this.responsibilities,
+    required this.aboutCompany,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Industry': industry,
+      'title': title,
+      'Category': category,
+      'JobPosition': jobPosition,
+      'jobType': jobType,
+      'TypeOfWorkspace': workspaceType,
+      'location': location,
+      'minPrice': minPrice,
+      'maxPrice': maxPrice,
+      'description': jobDescription,
+      'requirements': requirements,
+      'responsibilities': responsibilities,
+      'aboutCompany': aboutCompany,
+    };
+  }
+
+  FormData copyWith({
+    String? industry,
+    String? title,
+    String? category,
+    String? jobPosition,
+    String? jobType,
+    String? workspaceType,
+    String? location,
+    int? minPrice,
+    int? maxPrice,
+    String? jobDescription,
+    String? requirements,
+    String? responsibilities,
+    String? aboutCompany,
+  }) {
+    return FormData(
+      industry: industry ?? this.industry,
+      title: title ?? this.title,
+      category: category ?? this.category,
+      jobPosition: jobPosition ?? this.jobPosition,
+      jobType: jobType ?? this.jobType,
+      workspaceType: workspaceType ?? this.workspaceType,
+      location: location ?? this.location,
+      minPrice: minPrice ?? this.minPrice,
+      maxPrice: maxPrice ?? this.maxPrice,
+      jobDescription: jobDescription ?? this.jobDescription,
+      requirements: requirements ?? this.requirements,
+      responsibilities: responsibilities ?? this.responsibilities,
+      aboutCompany: aboutCompany ?? this.aboutCompany,
+    );
+  }
+}
+
 
 class JobFormPage1 extends StatefulWidget {
   const JobFormPage1({Key? key}) : super(key: key);
@@ -11,8 +99,20 @@ class JobFormPage1 extends StatefulWidget {
 }
 
 class _JobFormPage1State extends State<JobFormPage1> {
+  late TextEditingController titleController;
+  late TextEditingController jobPositionController;
+  late TextEditingController jobDescriptionController;
+  late TextEditingController requirementsController;
+  late TextEditingController responsibilitiesController;
+  late TextEditingController aboutCompanyController;
+
   String selectedIndustry = 'Design and Development';
   String? selectedCategory = 'UI/UX design';
+  String? selectedJobType;
+  String? selectedWorkspaceType;
+  String? selectedLocation;
+  int minPrice = 0;
+  int maxPrice = 50000;
 
   Map<String, List<String>> categoriesMap = {
     'Design and Development': ['UI/UX design', 'Frontend developer', 'Backend developer', 'DevOps developer'],
@@ -21,21 +121,36 @@ class _JobFormPage1State extends State<JobFormPage1> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController();
+    jobPositionController = TextEditingController();
+    jobDescriptionController = TextEditingController();
+    requirementsController = TextEditingController();
+    responsibilitiesController = TextEditingController();
+    aboutCompanyController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    jobPositionController.dispose();
+    jobDescriptionController.dispose();
+    requirementsController.dispose();
+    responsibilitiesController.dispose();
+    aboutCompanyController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: PageIndicator(
-                currentPage: 0,
-                totalPages: 4,
-              ),
-            ),
-
             const Center(
               child: Text(
                 "Description",
@@ -45,18 +160,16 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-
-            const SizedBox(height: 20), // Add some space between page indicator and form fields
-            // Industry Dropdown
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Industry',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
-                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -78,12 +191,12 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 onChanged: (String? value) {
                   setState(() {
                     selectedIndustry = value!;
-                    selectedCategory = null; // Reset category when industry changes
+                    selectedCategory = null;
                   });
                 },
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Colors.transparent, // Set to transparent to let Container handle background color
+                  fillColor: Colors.transparent,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide.none,
@@ -91,9 +204,38 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-
             SizedBox(height: 20),
-            // Category Dropdown
+            Text(
+              'Title',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
             Text(
               'Category',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -101,8 +243,8 @@ class _JobFormPage1State extends State<JobFormPage1> {
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
-                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -137,17 +279,16 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-
             SizedBox(height: 20),
-            const Text(
+            Text(
               'Job Position',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
-                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -157,8 +298,9 @@ class _JobFormPage1State extends State<JobFormPage1> {
                   ),
                 ],
               ),
-              child: const TextField(
-                decoration: InputDecoration(
+              child: TextField(
+                controller: jobPositionController,
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -168,7 +310,6 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-
             SizedBox(height: 20),
             Text(
               'Job Type',
@@ -176,18 +317,18 @@ class _JobFormPage1State extends State<JobFormPage1> {
             ),
             Container(
               decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
-              borderRadius: BorderRadius.circular(5.0), // Add border radius
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 20,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
               child: DropdownButtonFormField<String>(
                 items: <String>['Full Time', 'Part Time']
                     .map((String value) {
@@ -196,7 +337,11 @@ class _JobFormPage1State extends State<JobFormPage1> {
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (String? value) {},
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedJobType = value!;
+                  });
+                },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -207,7 +352,6 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-
             SizedBox(height: 20),
             Text(
               'Type of Workspace',
@@ -216,8 +360,8 @@ class _JobFormPage1State extends State<JobFormPage1> {
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
-                borderRadius: BorderRadius.circular(5.0), // Add border radius
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -235,7 +379,11 @@ class _JobFormPage1State extends State<JobFormPage1> {
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (String? value) {},
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedWorkspaceType = value!;
+                  });
+                },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -246,19 +394,33 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
-
-            Spacer(), // Added Spacer to push the button to the bottom
+            Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: 200,
                 height: 50,
-                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   onPressed: () {
+                    FormData formData = FormData(
+                      industry: selectedIndustry,
+                      title: titleController.text,
+                      category: selectedCategory!,
+                      jobPosition: jobPositionController.text,
+                      jobType: selectedJobType!,
+                      workspaceType: selectedWorkspaceType!,
+                      location: selectedLocation ?? "",
+                      minPrice: minPrice,
+                      maxPrice: maxPrice,
+                      jobDescription: jobDescriptionController.text,
+                      requirements: requirementsController.text,
+                      responsibilities: responsibilitiesController.text,
+                      aboutCompany: aboutCompanyController.text,
+                    );
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => JobFormPage2()),
+                      MaterialPageRoute(builder: (context) => JobFormPage2(formData: formData)),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -267,7 +429,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Next',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -281,8 +443,11 @@ class _JobFormPage1State extends State<JobFormPage1> {
   }
 }
 
+
 class JobFormPage2 extends StatefulWidget {
-  const JobFormPage2({Key? key}) : super(key: key);
+  final FormData formData;
+
+  const JobFormPage2({Key? key, required this.formData}) : super(key: key);
 
   @override
   _JobFormPage2State createState() => _JobFormPage2State();
@@ -290,9 +455,9 @@ class JobFormPage2 extends StatefulWidget {
 
 class _JobFormPage2State extends State<JobFormPage2> {
   late TextEditingController _searchController;
-  List<String> _suggestions = []; // List of suggestions based on user input
-  String _selectedLocation = ''; // Selected location
-  bool _showSuggestions = true; // Boolean to control whether to show suggestions or not
+  List<String> _suggestions = [];
+  String _selectedLocation = '';
+  bool _showSuggestions = true;
 
   @override
   void initState() {
@@ -306,9 +471,7 @@ class _JobFormPage2State extends State<JobFormPage2> {
     super.dispose();
   }
 
-  // Function to get suggestions based on user input
   void getSuggestions(String query) {
-    // In this example, it's just a dummy list of suggestions, you might fetch real suggestions from an API
     List<String> dummySuggestions = [
       'New York',
       'Los Angeles',
@@ -336,11 +499,6 @@ class _JobFormPage2State extends State<JobFormPage2> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const PageIndicator(
-              currentPage: 1,
-              totalPages: 4,
-            ),
-            const SizedBox(height: 20),
             const Center(
               child: Text(
                 "Search Locations",
@@ -350,8 +508,7 @@ class _JobFormPage2State extends State<JobFormPage2> {
                 ),
               ),
             ),
-
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
                 boxShadow: [
@@ -359,7 +516,7 @@ class _JobFormPage2State extends State<JobFormPage2> {
                     color: Colors.grey.withOpacity(0.2),
                     spreadRadius: 3,
                     blurRadius: 3,
-                    offset: const Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -376,17 +533,14 @@ class _JobFormPage2State extends State<JobFormPage2> {
                   ),
                 ),
                 onChanged: (value) {
-                  // Call the function to get suggestions whenever the text changes
                   getSuggestions(value);
-                  // Show suggestions
                   setState(() {
                     _showSuggestions = true;
                   });
                 },
               ),
             ),
-            const SizedBox(height: 20),
-            // Only show suggestions if the boolean is true
+            SizedBox(height: 20),
             if (_showSuggestions)
               Expanded(
                 child: ListView.builder(
@@ -395,12 +549,9 @@ class _JobFormPage2State extends State<JobFormPage2> {
                     return ListTile(
                       title: Text(_suggestions[index]),
                       onTap: () {
-                        // Set the selected location when a suggestion is tapped
                         setState(() {
                           _selectedLocation = _suggestions[index];
-                          // Update text field with selected location
                           _searchController.text = _selectedLocation;
-                          // Hide suggestions
                           _showSuggestions = false;
                         });
                       },
@@ -408,18 +559,18 @@ class _JobFormPage2State extends State<JobFormPage2> {
                   },
                 ),
               ),
-            Spacer(), // Added Spacer to push the button to the bottom
+            Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: 200,
                 height: 50,
-                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => JobFormPage3()),
+                      MaterialPageRoute(builder: (context) => JobFormPage3(formData: widget.formData.copyWith(location: _selectedLocation))),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -442,15 +593,18 @@ class _JobFormPage2State extends State<JobFormPage2> {
   }
 }
 
+
 class JobFormPage3 extends StatefulWidget {
-  const JobFormPage3({Key? key}) : super(key: key);
+  final FormData formData;
+
+  const JobFormPage3({Key? key, required this.formData}) : super(key: key);
 
   @override
   _JobFormPage3State createState() => _JobFormPage3State();
 }
 
 class _JobFormPage3State extends State<JobFormPage3> {
-  RangeValues _values = const RangeValues(0, 50000); // Initial values for the price range
+  RangeValues _values = const RangeValues(0, 50000);
 
   @override
   Widget build(BuildContext context) {
@@ -512,18 +666,18 @@ class _JobFormPage3State extends State<JobFormPage3> {
                 ),
               ],
             ),
-            Spacer(), // Added Spacer to push the button to the bottom
+            Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: 200,
                 height: 50,
-                margin: EdgeInsets.only(bottom: 20), // 20px above the bottom
+                margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FinalJobPage()),
+                      MaterialPageRoute(builder: (context) => FinalJobPage(formData: widget.formData.copyWith(minPrice: _values.start.toInt(), maxPrice: _values.end.toInt()))),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -547,7 +701,34 @@ class _JobFormPage3State extends State<JobFormPage3> {
 }
 
 
-class FinalJobPage extends StatelessWidget {
+
+class FinalJobPage extends StatefulWidget {
+  final FormData formData;
+
+  const FinalJobPage({Key? key, required this.formData}) : super(key: key);
+
+  @override
+  _FinalJobPageState createState() => _FinalJobPageState();
+}
+
+class _FinalJobPageState extends State<FinalJobPage> {
+  // Define controllers for each text field
+  TextEditingController jobDescriptionController = TextEditingController();
+  TextEditingController requirementsController = TextEditingController();
+  TextEditingController responsibilitiesController = TextEditingController();
+  TextEditingController aboutCompanyController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize controllers with initial values
+    jobDescriptionController.text = widget.formData.jobDescription;
+    requirementsController.text = widget.formData.requirements;
+    responsibilitiesController.text = widget.formData.responsibilities;
+    aboutCompanyController.text = widget.formData.aboutCompany;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -575,13 +756,13 @@ class FinalJobPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('Job Description'),
+                    _buildLabeledTextField('Job Description', jobDescriptionController),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('Requirements'),
+                    _buildLabeledTextField('Requirements', requirementsController),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('Responsibilities'),
+                    _buildLabeledTextField('Responsibilities', responsibilitiesController),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('About Company'),
+                    _buildLabeledTextField('About Company', aboutCompanyController),
                     SizedBox(height: 20), // Add some extra space at the end
                   ],
                 ),
@@ -593,7 +774,8 @@ class FinalJobPage extends StatelessWidget {
             padding: EdgeInsets.all(20),
             child: ElevatedButton(
               onPressed: () {
-                // Perform any action needed on button press
+                // Perform API call on button press
+                _submitData(widget.formData);
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.purple,
@@ -612,7 +794,7 @@ class FinalJobPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLabeledTextField(String label) {
+  Widget _buildLabeledTextField(String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -638,6 +820,7 @@ class FinalJobPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
+              controller: controller,
               maxLines: null,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
@@ -650,10 +833,55 @@ class FinalJobPage extends StatelessWidget {
       ],
     );
   }
-}
 
-void main() {
-  runApp(MaterialApp(
-    home: FinalJobPage(),
-  ));
+  void _submitData(FormData formData) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userToken = prefs.getString('userToken');
+
+    formData.jobDescription = jobDescriptionController.text;
+    String requirements = requirementsController.text;
+    String responsibilities = responsibilitiesController.text;
+    formData.aboutCompany = aboutCompanyController.text;
+
+    List<String> requirementsArray = requirements.split('\n');
+    List<String> responsibilitiesArray = responsibilities.split('\n');
+
+    final jsonData = formData.toJson();
+
+    jsonData['requirements'] = requirementsArray;
+    jsonData['responsibilities'] = responsibilitiesArray;
+
+    Map<String, dynamic> salaryRange = {
+      'low': jsonData['minPrice'],
+      'high': jsonData['maxPrice'],
+    };
+    jsonData.remove('minPrice');
+    jsonData.remove('maxPrice');
+    jsonData.remove('currency');
+    jsonData['salaryRange'] = salaryRange;
+
+    final encodedData = jsonEncode(jsonData);
+
+    print(encodedData);
+
+    const apiUrl = 'http://madhack.codingblinders.com/job/create';
+    // const apiUrl = 'http://localhost:4000/api/job/create';
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: encodedData,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': userToken!, // Add the token to the header
+      },
+    );
+
+    if (response.statusCode == 200) {
+
+      print('Data submitted successfully');
+    } else {
+      // Handle failure
+      print('Failed to submit data. Error code: ${response.body}');
+    }
+  }
 }
