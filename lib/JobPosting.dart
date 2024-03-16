@@ -140,15 +140,52 @@
 //     );
 //   }
 // }
-//
 
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(JobPosting());
 }
-class JobPosting extends StatelessWidget {
+
+class JobPosting extends StatefulWidget {
+  @override
+  _JobPostingState createState() => _JobPostingState();
+}
+
+class _JobPostingState extends State<JobPosting> {
+  List<dynamic> jobs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchJobs();
+  }
+
+  Future<void> fetchJobs() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userToken = prefs.getString('userToken');
+      String? userId = prefs.getString('userId');
+
+      final response = await http.get(
+        Uri.parse('http://madhack.codingblinders.com/job/employer/$userId'),
+        headers: {
+          'x-access-token': userToken ?? '', // Add userToken as a header
+        },
+      );
+      final responseData = json.decode(response.body);
+      setState(() {
+        jobs = responseData['data'];
+      });
+    } catch (error) {
+      print('Error fetching jobs: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -157,106 +194,120 @@ class JobPosting extends StatelessWidget {
           title: Text('Job Details'),
         ),
         body: Center(
-          child: Container(
-            padding: EdgeInsets.all(20.0),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 5, right: 10),
-                      child: Icon(
-                        Icons.work,
-                        size: 50,
-                      ),
-                    ), // Icon widget
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Senior web developer',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18
-                            ),
-                          ),
-                          Text(
-                            'Coding Blinders - Sri Lanka',
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.visibility),
-                        SizedBox(width: 5),
-                        Text('1.8K'),
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-
-                  children: [
-                    Container(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Text('Remote'),
-                    ),
-                    SizedBox(width: 10),
-                    Container(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Text('Full-Time'),
-                    ),
-                    const SizedBox(width: 10),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 5, right: 90),
-
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          '\$7K-10K',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold
-                          ),
-                          textAlign: TextAlign.right,
-
-                        ),
-                        Text(
-                          '/Mo',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey
-                          ), // Adjust font size
-                          textAlign: TextAlign.right, // Align text to the right
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
+          child: ListView.builder(
+            itemCount: jobs.length,
+            itemBuilder: (context, index) {
+              return JobCard(
+                job: jobs[index],
+              );
+            },
           ),
         ),
       ),
     );
   }
 }
+
+class JobCard extends StatelessWidget {
+  final dynamic job;
+
+  JobCard({required this.job});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 5, right: 10),
+                child: Icon(
+                  Icons.work,
+                  size: 50,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      job['title'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      'Coding Blinders - Sri Lanka',
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.visibility),
+                  SizedBox(width: 5),
+                  Text('1.8K'),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Text(job['TypeOfWorkspace']),
+              ),
+              SizedBox(width: 10),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Text(job['jobType']),
+              ),
+              SizedBox(width: 10),
+              Padding(
+                padding: EdgeInsets.only(top: 5, right: 50),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    '\$${job['salaryRange']['low']}-${job['salaryRange']['high']}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                  Text(
+                    '/Mo',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ],
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
