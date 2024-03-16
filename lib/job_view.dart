@@ -30,7 +30,21 @@ class _JobView extends State<JobView> {
 
       });
     } else {
-      throw Exception('Failed to load job data');
+      toastification.show(
+        context: context,
+        title: Text(jsonDecode(response.body)['message']),
+        autoCloseDuration: const Duration(seconds: 2),
+        type: ToastificationType.error,
+        style: ToastificationStyle.fillColored,
+        alignment: Alignment.bottomCenter,
+        direction: TextDirection.ltr,
+        showProgressBar: false,
+        closeButtonShowType: CloseButtonShowType.none,
+        closeOnClick: false,
+        pauseOnHover: false,
+        dragToClose: true,
+        applyBlurEffect: true,
+      );
     }
   }
 
@@ -160,7 +174,7 @@ class _JobView extends State<JobView> {
                       backgroundColor: MaterialStateProperty.all(Colors.transparent),
                     ),
 
-                    icon: Icon(Icons.bookmark),
+                    icon: Icon(Icons.bookmark,color: Colors.white,),
                     onPressed: () {
                       toastification.show(
                         context: context,

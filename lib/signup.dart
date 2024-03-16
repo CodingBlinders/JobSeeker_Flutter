@@ -67,6 +67,11 @@ class _SignupPageState extends State<SignupPage> {
       await prefs.setString('userRole', userRole);
       await prefs.setString('userToken', userToken);
       print(responseData);
+      if(userRole == 'jobApplicant'){
+        Navigator.pushNamed(context, '/home');
+      }else{
+        Navigator.pushNamed(context, '/emp');
+      }
 
     } else {
       toastification.show(
