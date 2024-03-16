@@ -21,7 +21,7 @@ class _FilterScreenState extends State<FilterScreen> {
   String? _selectedLocation;
   String? _selectedIndustry;
   double _expectedSalary = 0.0;
-  double _maxSalary = 100000.0;
+  double _maxSalary = 999999999;
   final List<String> _selectedTags = [];
 
   final List<String> _categories = [
@@ -199,8 +199,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 _maxSalary.toDouble(),
               ), // Track the current salary selection
               min: 0.0,
-              max: 100000, // Maximum salary
-              divisions: 1000,
+              max: 999999999, // Maximum salary
+              divisions: 100000000,
               labels: RangeLabels(
                 _expectedSalary.toStringAsFixed(0),
                 _maxSalary.toStringAsFixed(0),
