@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'JobPosting.dart';
-import 'components/page_indicator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'components/shadowDropDown.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'JobPosting.dart';
+import 'components/page_indicator.dart';
 
 const apiUrl = "http://madhack.codingblinders.com//job/create/";
 
