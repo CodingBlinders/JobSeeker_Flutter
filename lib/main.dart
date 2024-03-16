@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
       ),
-      initialRoute: '/profile',
+      initialRoute: '/login',
       routes: {
         '/login': (context) =>  LoginPage(),
         '/signup': (context) =>  SignupPage(),
