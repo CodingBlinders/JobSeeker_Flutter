@@ -49,7 +49,7 @@ class JobCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Coding Blinders - Sri Lanka',
+                        job['description']+' - '+job['location']
                       ),
                     ],
                   ),
