@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'JobPosting.dart';
 import 'components/page_indicator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'components/shadowDropDown.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 const apiUrl = "http://madhack.codingblinders.com//job/create/";
 
@@ -160,6 +163,67 @@ class _JobFormPage1State extends State<JobFormPage1> {
                 ),
               ),
             ),
+            Text(
+              'Title',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Job Position',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 20,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: jobPositionController,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
             SizedBox(height: 20),
             Text(
               'Industry',
@@ -205,37 +269,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              'Title',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                borderRadius: BorderRadius.circular(5.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 20,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
+
             Text(
               'Category',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -280,37 +314,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              'Job Position',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                borderRadius: BorderRadius.circular(5.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 20,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: jobPositionController,
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
+
             Text(
               'Job Type',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -756,13 +760,17 @@ class _FinalJobPageState extends State<FinalJobPage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('Job Description', jobDescriptionController),
+                    _buildLabeledTextField(
+                        'Job Description', jobDescriptionController),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('Requirements', requirementsController),
+                    _buildLabeledTextField(
+                        'Requirements', requirementsController),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('Responsibilities', responsibilitiesController),
+                    _buildLabeledTextField(
+                        'Responsibilities', responsibilitiesController),
                     SizedBox(height: 20),
-                    _buildLabeledTextField('About Company', aboutCompanyController),
+                    _buildLabeledTextField(
+                        'About Company', aboutCompanyController),
                     SizedBox(height: 20), // Add some extra space at the end
                   ],
                 ),
@@ -794,7 +802,8 @@ class _FinalJobPageState extends State<FinalJobPage> {
     );
   }
 
-  Widget _buildLabeledTextField(String label, TextEditingController controller) {
+  Widget _buildLabeledTextField(String label,
+      TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -806,8 +815,10 @@ class _FinalJobPageState extends State<FinalJobPage> {
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey.withOpacity(0.5)), // Add border
-            borderRadius: BorderRadius.circular(5.0), // Add border radius
+            border: Border.all(color: Colors.grey.withOpacity(0.5)),
+            // Add border
+            borderRadius: BorderRadius.circular(5.0),
+            // Add border radius
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
@@ -833,6 +844,9 @@ class _FinalJobPageState extends State<FinalJobPage> {
       ],
     );
   }
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
   void _submitData(FormData formData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -877,11 +891,55 @@ class _FinalJobPageState extends State<FinalJobPage> {
     );
 
     if (response.statusCode == 200) {
-
       print('Data submitted successfully');
+      Fluttertoast.showToast(
+          msg: "Data submitted successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      // Send phone notification
+      _showNotification();
+
+      // Navigate to JobPosting page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => JobPosting()),
+      );
     } else {
       // Handle failure
       print('Failed to submit data. Error code: ${response.body}');
+      Fluttertoast.showToast(
+          msg: "Failed to submit data. Error code: ${response.body}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
+  }
+
+  void _showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'New Job Created',
+      'A New Job has been created',
+      platformChannelSpecifics,
+      payload: 'New Job Created',
+    );
   }
 }

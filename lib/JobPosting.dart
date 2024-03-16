@@ -10,12 +10,28 @@ void main() {
   runApp(JobPosting());
 }
 
-class JobPosting extends StatefulWidget {
+class JobPosting extends StatelessWidget {
   @override
-  _JobPostingState createState() => _JobPostingState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Navigator(
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => _JobPostingState(),
+          );
+        },
+      ),
+    );
+  }
 }
 
-class _JobPostingState extends State<JobPosting> {
+class _JobPostingState extends StatefulWidget {
+  @override
+  __JobPostingStateState createState() => __JobPostingStateState();
+}
+
+class __JobPostingStateState extends State<_JobPostingState> {
   List<dynamic> jobs = [];
 
   @override
@@ -47,110 +63,237 @@ class _JobPostingState extends State<JobPosting> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              // Implement share functionality
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              // Implement settings functionality
+            },
+          ),
+        ],
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
         ),
-        body: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                    offset: Offset(0, 3),
+      ),
+      drawer: Drawer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      // Implement search functionality
-                    },
-                  ),
-                  const Expanded(
-                    child: TextField(
-                      // controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search Jobs',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20),
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const JobFormPage1()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blue, // background color
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            minimumSize: const Size(double.infinity, 50), // Set minimumSize to increase height
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                size: 36, // Set the size of the icon
-                              ),
-                              SizedBox(width: 8), // Space between icon and text
-                              Text(
-                                'Create a New Job',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          ),
+                      const CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
                         ),
+                        radius: 45,
+                      ),
+                      SizedBox(height: 10),
+                      FutureBuilder<String?>(
+                        future: _getUserEmail(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error loading email');
+                          } else {
+                            return Text(
+                              snapshot.data ?? 'Testing Name',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: ListView.builder(
-                  itemCount: jobs.length,
-                  itemBuilder: (context, index) {
-                    return JobCard(
-                      job: jobs[index],
-                    );
+                ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text('Home'),
+                  onTap: () {
+                    // Handle home navigation
                   },
                 ),
-              ),
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Profile'),
+                  onTap: () {
+                    // Handle profile navigation
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                  onTap: () {
+                    // Handle settings navigation
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.request_quote),
+                  title: const Text('Requests'),
+                  onTap: () {
+                    // Handle requests navigation
+                  },
+                ),
+              ],
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sign Out'),
+              onTap: () {
+                _clearSharedPreferences();
+                // Handle sign out
+              },
             ),
           ],
         ),
       ),
+      body: Column(
+        children: [
+          SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    // Implement search functionality
+                  },
+                ),
+                const Expanded(
+                  child: TextField(
+                    // controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search Jobs',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print("Button pressed!");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const JobFormPage1()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue, // background color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          minimumSize: const Size(double.infinity, 50), // Set minimumSize to increase height
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              size: 36,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Create a New Job',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            "Recently Created Jobs",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Center(
+              child: ListView.builder(
+                itemCount: jobs.length,
+                itemBuilder: (context, index) {
+                  return JobCard(
+                    job: jobs[index],
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
+
+  void _clearSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  Future<String?> _getUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    return email;
+  }
 }
-
-
-
-
