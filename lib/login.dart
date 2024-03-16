@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       if(userRole == 'jobApplicant'){
         Navigator.pushNamed(context, '/home');
       }else{
-        Navigator.pushNamed(context, '/job-view');
+        Navigator.pushNamed(context, '/emp');
       }
 
       // Store user data in SharedPreferences
