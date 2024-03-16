@@ -424,7 +424,7 @@ class _JobFormPage1State extends State<JobFormPage1> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.purple,
+                    primary: Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -574,7 +574,7 @@ class _JobFormPage2State extends State<JobFormPage2> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.purple,
+                    primary: Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -681,7 +681,7 @@ class _JobFormPage3State extends State<JobFormPage3> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.purple,
+                    primary: Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -778,7 +778,7 @@ class _FinalJobPageState extends State<FinalJobPage> {
                 _submitData(widget.formData);
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.purple,
+                primary: Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
