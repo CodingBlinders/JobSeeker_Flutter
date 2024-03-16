@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'job_forms.dart';
+import 'model/job_forms.dart';
 
 
 class JobPosting extends StatelessWidget {

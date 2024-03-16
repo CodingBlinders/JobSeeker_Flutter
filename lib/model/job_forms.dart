@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'components/page_indicator.dart';
+import '../components/page_indicator.dart';
 
 class JobFormPage1 extends StatefulWidget {
   const JobFormPage1({Key? key}) : super(key: key);
