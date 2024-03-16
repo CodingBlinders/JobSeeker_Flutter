@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'JobCard.dart';
 import 'job_forms.dart';
+import 'login.dart';
 
 void main() {
   runApp(JobPosting());
@@ -69,13 +70,11 @@ class __JobPostingStateState extends State<_JobPostingState> {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              // Implement share functionality
             },
           ),
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              // Implement settings functionality
             },
           ),
         ],
@@ -171,7 +170,10 @@ class __JobPostingStateState extends State<_JobPostingState> {
               title: Text('Sign Out'),
               onTap: () {
                 _clearSharedPreferences();
-                // Handle sign out
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
               },
             ),
           ],
@@ -286,7 +288,7 @@ class __JobPostingStateState extends State<_JobPostingState> {
     );
   }
 
-  void _clearSharedPreferences() async {
+  Future _clearSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }

@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:jobseeker_madhack/job_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'login.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -66,29 +68,118 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
-        ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.rotate_right_sharp),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-          ),
-          const SizedBox(
-            width: 10,
+            icon: Icon(Icons.share),
+            onPressed: () {
+            },
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
-            padding: const EdgeInsets.symmetric(
-              vertical: 5,
-            ),
+            icon: Icon(Icons.settings),
+            onPressed: () {
+            },
           ),
         ],
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
+                        radius: 45,
+                      ),
+                      SizedBox(height: 10),
+                      FutureBuilder<String?>(
+                        future: _getUserEmail(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error loading email');
+                          } else {
+                            return Text(
+                              snapshot.data ?? 'Testing Name',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text('Home'),
+                  onTap: () {
+                    // Handle home navigation
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Profile'),
+                  onTap: () {
+                    // Handle profile navigation
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                  onTap: () {
+                    // Handle settings navigation
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.request_quote),
+                  title: const Text('Requests'),
+                  onTap: () {
+                    // Handle requests navigation
+                  },
+                ),
+              ],
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sign Out'),
+              onTap: () {
+                _clearSharedPreferences();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -141,5 +232,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  void _clearSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  Future<String?> _getUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    return email;
   }
 }
