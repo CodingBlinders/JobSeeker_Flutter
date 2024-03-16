@@ -13,6 +13,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  @override
+  void initState()  {
+    super.initState();
+    getData();
+  }
+  Future<void> getData()  async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Retrieve user data from SharedPreferences
+    String userRole = prefs.getString('userRole') ?? '';
+    if(userRole == 'jobApplicant'){
+      Navigator.pushNamed(context, '/home');
+    }
+    else if (userRole == 'employer'){
+      Navigator.pushNamed(context, '/emp');
+    }
+  }
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -45,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushNamed(context, '/home');
       }
       else{
-        Navigator.pushNamed(context, '/employee');
+        Navigator.pushNamed(context, '/emp');
       }
 
       // Store user data in SharedPreferences

@@ -50,8 +50,11 @@ class JobCard extends StatelessWidget {
                             fontSize: 18,
                           ),
                         ),
-                        Text(
-                          job['description']+' - '+job['location']
+                        Container(
+                          height: 100,
+                          child: Text(
+                            job['description']+' - '+job['location']
+                          ),
                         ),
                       ],
                     ),

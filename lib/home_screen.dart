@@ -148,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   leading: Icon(Icons.person),
                   title: Text('Profile'),
                   onTap: () {
+                    Navigator.pushNamed(context, '/profile');
                     // Handle profile navigation
                   },
                 ),
