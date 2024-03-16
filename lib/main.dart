@@ -8,7 +8,7 @@ import 'package:jobseeker_madhack/send_cv.dart';
 import 'package:jobseeker_madhack/signup.dart';
 
 void main() {
-  runApp(JobPosting());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
         '/filter': (context) => const FilterScreen(),
         '/send-cv': (context) => const SendCVScreen(),
         '/home': (context) => const HomeScreen(),
-        '/JobPostingForm': (context) => const JobFormPage1(),
+        '/employee': (context) => JobPosting(),
       },
     );
   }
