@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final responseData = json.decode(response.body);
       setState(() {
         jobData = responseData['data'];
+        print(jobData);
       });
     } catch (error) {
       print('Error fetching jobs: $error');
@@ -97,20 +98,17 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.all(25),
               child: CustomSearchBar(),
             ),
-            const SizedBox(
-              height: 40,
-            ),
-            Expanded(
-              child: SizedBox(
-                height: 180,
-                width: 330,
-                child: ListView.builder(
-                  itemCount: jobData.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => JobCard(job: jobData[index]),
-                ),
-              ),
-            ),
+            // const SizedBox(
+            //   height: 40,
+            // ),
+
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: jobData.length,
+            //     scrollDirection: Axis.horizontal,
+            //     itemBuilder: (context, index) => JobCard(job: jobData[index]),
+            //   ),
+            // ),
             ScrollCardWidget(
               childrenList: categories
                   .map(
@@ -119,13 +117,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   .toList(),
             ),
             Expanded(
-              child: SizedBox(
-                height: 180,
-                width: 330,
+              child: Center(
                 child: ListView.builder(
                   itemCount: jobData.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => JobCard(job: jobData[index]),
+                  itemBuilder: (context, index) {
+                    return JobCard(
+                      job: jobData[index],
+                    );
+                  },
                 ),
               ),
             ),
