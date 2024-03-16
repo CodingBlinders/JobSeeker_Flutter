@@ -7,6 +7,7 @@ import 'package:jobseeker_madhack/components/item_card.dart';
 import 'package:jobseeker_madhack/components/scroll_cards.dart';
 import 'package:jobseeker_madhack/components/search_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobseeker_madhack/job_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -89,47 +90,55 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(25),
-              child: CustomSearchBar(),
-            ),
-            // const SizedBox(
-            //   height: 40,
-            // ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(25),
+            child: CustomSearchBar(),
+          ),
+          // const SizedBox(
+          //   height: 40,
+          // ),
 
-            // Expanded(
-            //   child: ListView.builder(
-            //     itemCount: jobData.length,
-            //     scrollDirection: Axis.horizontal,
-            //     itemBuilder: (context, index) => JobCard(job: jobData[index]),
-            //   ),
-            // ),
-            ScrollCardWidget(
-              childrenList: categories
-                  .map(
-                    (title) => FilterChipWidget(title: title),
-                  )
-                  .toList(),
-            ),
-            Expanded(
-              child: Center(
-                child: ListView.builder(
-                  itemCount: jobData.length,
-                  itemBuilder: (context, index) {
-                    return JobCard(
+          // Expanded(
+          //   child: ListView.builder(
+          //     itemCount: jobData.length,
+          //     scrollDirection: Axis.horizontal,
+          //     itemBuilder: (context, index) => JobCard(job: jobData[index]),
+          //   ),
+          // ),
+          ScrollCardWidget(
+            childrenList: categories
+                .map(
+                  (title) => FilterChipWidget(title: title),
+                )
+                .toList(),
+          ),
+          Expanded(
+            child: Center(
+              child: ListView.builder(
+                itemCount: jobData.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JobView(data: jobData[index]['_id']),
+                        ),
+                      );
+                    },
+                    child: JobCard(
                       job: jobData[index],
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

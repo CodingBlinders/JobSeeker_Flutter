@@ -8,25 +8,36 @@ import 'package:toastification/toastification.dart';
 
 
 class JobView extends StatefulWidget {
+  final String data;
+
+  const JobView({Key? key, required this.data}) : super(key: key);
   @override
-  _JobView createState() => _JobView();
+  _JobView createState() => _JobView(data);
 }
 
 class _JobView extends State<JobView> {
+  final String data;
   Map<String, dynamic>? jobData;
+  late String jobId;
+
+  _JobView(String data) : this.data = data;
 
   @override
   void initState() {
     super.initState();
+    jobId = data;
+    print(jobId);
     fetchJobData();
   }
 
   Future<void> fetchJobData() async {
+
     var response = await http.get(
-        Uri.parse('http://madhack.codingblinders.com/job/65edfa92e4761f65ec8f2135'));
+        Uri.parse('http://madhack.codingblinders.com/job/$jobId'));
     if (response.statusCode == 200) {
       setState(() {
         jobData = jsonDecode(response.body)['data'];
+        print(jobData);
 
       });
     } else {
@@ -80,7 +91,7 @@ class _JobView extends State<JobView> {
                         Row(
                           children: [
                             CircleAvatar(
-                              backgroundImage: NetworkImage(jobData!['employer']['image']),
+                              backgroundImage: NetworkImage('https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg'),
                               radius: 30.0,),
 
                             SizedBox(width: 20.0),
@@ -90,11 +101,11 @@ class _JobView extends State<JobView> {
                               children: [
                                 Container(
                                   width: 270,
-                                  child: Text(jobData!['title'] ,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black87,height: 0),),
+                                  child: Text(jobData!['Industry'] ,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black87,height: 0),),
                                 ),
                                 Container(
                                   width: 270,
-                                  child: Text(jobData!['employer']['profile']['companyName']+ ' - ' + jobData!['location'],style: TextStyle(color: Colors.black54),),
+                                  child: Text(jobData!['Category']+ ' - ' + jobData!['location'],style: TextStyle(color: Colors.black54),),
                                 ),
                                       ],
                             ),
