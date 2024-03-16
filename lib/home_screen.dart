@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:jobseeker_madhack/components/JobCard.dart';
 import 'package:jobseeker_madhack/components/filter_chip.dart';
 import 'package:jobseeker_madhack/components/item_card.dart';
 import 'package:jobseeker_madhack/components/scroll_cards.dart';
 import 'package:jobseeker_madhack/components/search_bar.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +17,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<dynamic> jobData = [];
+  Future<void> _fetchData() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userToken = prefs.getString('userToken');
+
+      final response = await http.get(
+        Uri.parse('http://madhack.codingblinders.com/job/all'),
+        headers: {
+          'x-access-token': userToken ?? '', // Add userToken as a header
+        },
+      );
+      final responseData = json.decode(response.body);
+      setState(() {
+        jobData = responseData['data'];
+      });
+    } catch (error) {
+      print('Error fetching jobs: $error');
+    }
+  }
+
   List<Widget> widgetCards = [
     ItemCard(),
     ItemCard(),
@@ -27,6 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
     'Technical lead',
     'Buisness analyst'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +100,16 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 40,
             ),
-            ScrollCardWidget(
-              childrenList: widgetCards,
+            Expanded(
+              child: SizedBox(
+                height: 180,
+                width: 330,
+                child: ListView.builder(
+                  itemCount: jobData.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => JobCard(job: jobData[index]),
+                ),
+              ),
             ),
             ScrollCardWidget(
               childrenList: categories
@@ -79,9 +119,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   .toList(),
             ),
             Expanded(
-              child: ScrollCardWidget(
-                childrenList: widgetCards,
-                dir: Axis.vertical,
+              child: SizedBox(
+                height: 180,
+                width: 330,
+                child: ListView.builder(
+                  itemCount: jobData.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => JobCard(job: jobData[index]),
+                ),
               ),
             ),
           ],
